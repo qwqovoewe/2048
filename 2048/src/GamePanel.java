@@ -169,8 +169,9 @@ public class GamePanel extends JPanel implements ActionListener {
 
     private boolean moveCardLeft(boolean b) {
         boolean res = false;
+        System.out.println("moveleft");
         Card card;
-        for (int i = 1; i < ROWS; i++) {
+        for (int i = 0; i < ROWS; i++) {
             for (int j = 1; j < COLS; j++) {
                 card = cards[i][j];
 
@@ -186,6 +187,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
     private boolean moveCardBottom(boolean b) {
         boolean res = false;
+        System.out.println("movebottom");
         Card card;
         for (int i = ROWS - 2; i >= 0; i--) {
             for (int j = 0; j < COLS; j++) {
@@ -202,14 +204,15 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     private boolean moveCardRight(boolean b) {
+        System.out.println("moveright");
         boolean res = false;
         Card card;
-        for (int i = 1; i < ROWS; i++) {
+        for (int i = 0; i < ROWS; i++) {
             for (int j = COLS - 2; j >= 0; j--) {
                 card = cards[i][j];
 
                 if (card.getNum() != 0) {//只要卡片不是空白卡片，就要移动
-                    if (card.moveTop(cards, b)) {
+                    if (card.moveRight(cards, b)) {
                         res = true;
                     }
                 }
@@ -308,7 +311,7 @@ public class GamePanel extends JPanel implements ActionListener {
     private void creatMenu() {
         //创建字体
         Font tfont = creatFont();
-        //创建JmenuBar
+        //创建JMenuBar
         JMenuBar jmb = new JMenuBar();
 
         JMenu jMenu1 = new JMenu("游戏");
@@ -349,32 +352,33 @@ public class GamePanel extends JPanel implements ActionListener {
         //设置指令
 
         jmi1.setActionCommand("restart");
-        jmi1.setActionCommand("exit");
-        jmi1.setActionCommand("help");
-        jmi1.setActionCommand("win");
+        jmi2.setActionCommand("exit");
+        jmi3.setActionCommand("help");
+        jmi4.setActionCommand("win");
 
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        if ("restart".equals(command)) {
+        if(command.equals("restart")){
             System.out.println("新游戏");
             restart();
-        } else if ("restart".equals(command)) {
+        }
+        else if(command.equals("exit")){
             System.out.println("退出");
-            Object[] options = {"确定", "取消"};
-            int res = JOptionPane.showOptionDialog(this, "你确定要退出游戏吗？",
-                    "", JOptionPane.YES_OPTION, JOptionPane.QUESTION_MESSAGE,
-                    null, options, options[0]);
-            if ((res == 0)) { //确认退出
+            Object[] options = {"确定","取消"};
+            int res =JOptionPane.showOptionDialog(this,"你确定退出游戏吗？","",JOptionPane.YES_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
+            if(res == 0){
                 System.exit(0);
             }
-        } else if ("help".equals(command)) {
+        }
+        else if(command.equals("help")){
             System.out.println("帮助");
             JOptionPane.showMessageDialog(null, "通过键盘的上下左右来移动，相同的数字会合并",
                     "提示！", JOptionPane.INFORMATION_MESSAGE);
-        } else if ("Win".equals(command)) {
+        }
+        else if(command.equals("win")){
             System.out.println("胜利条件");
             JOptionPane.showMessageDialog(null, "得到数字2048获得胜利，当没有空卡片则失效",
                     "提示！", JOptionPane.INFORMATION_MESSAGE);
