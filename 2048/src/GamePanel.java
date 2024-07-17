@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Random;
+import java.util.Stack;
 
 public class GamePanel extends JPanel implements ActionListener {
     private static final int ROWS = 4;
@@ -14,6 +15,7 @@ public class GamePanel extends JPanel implements ActionListener {
     private GamePanel panel = null;
 
     private Card[][] cards = new Card[ROWS][COLS];
+    private Stack<Card[][]> history;
 
     private String gameFlag = "start";
 
@@ -152,6 +154,7 @@ public class GamePanel extends JPanel implements ActionListener {
         boolean res = false;
         System.out.println("movetop");
         Card card;
+        history.push(cards);
         for (int i = 1; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
                 card = cards[i][j];
@@ -171,6 +174,7 @@ public class GamePanel extends JPanel implements ActionListener {
         boolean res = false;
         System.out.println("moveleft");
         Card card;
+        history.push(cards);
         for (int i = 0; i < ROWS; i++) {
             for (int j = 1; j < COLS; j++) {
                 card = cards[i][j];
@@ -189,6 +193,7 @@ public class GamePanel extends JPanel implements ActionListener {
         boolean res = false;
         System.out.println("movebottom");
         Card card;
+        history.push(cards);
         for (int i = ROWS - 2; i >= 0; i--) {
             for (int j = 0; j < COLS; j++) {
                 card = cards[i][j];
@@ -207,6 +212,7 @@ public class GamePanel extends JPanel implements ActionListener {
         System.out.println("moveright");
         boolean res = false;
         Card card;
+        history.push(cards);
         for (int i = 0; i < ROWS; i++) {
             for (int j = COLS - 2; j >= 0; j--) {
                 card = cards[i][j];
@@ -217,7 +223,6 @@ public class GamePanel extends JPanel implements ActionListener {
                     }
                 }
             }
-
         }
         return res;
     }
@@ -241,6 +246,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
         if (card != null) {
             card.setNum(num);
+
         }
 
 
@@ -283,6 +289,7 @@ public class GamePanel extends JPanel implements ActionListener {
                 cards[i][j] = card;
             }
         }
+        history=new Stack<>();
     }
 
     @Override
@@ -322,8 +329,11 @@ public class GamePanel extends JPanel implements ActionListener {
         jmi1.setFont(tfont);
         JMenuItem jmi2 = new JMenuItem("退出");
         jmi2.setFont(tfont);
+        JMenuItem jmi5 = new JMenuItem("返回上一步");
+        jmi5.setFont(tfont);
 
         jMenu1.add(jmi1);
+        jMenu1.add(jmi5);
         jMenu1.add(jmi2);
 
         JMenu jMenu2 = new JMenu("帮助");
@@ -348,6 +358,7 @@ public class GamePanel extends JPanel implements ActionListener {
         jmi2.addActionListener(this);
         jmi3.addActionListener(this);
         jmi4.addActionListener(this);
+        jmi5.addActionListener(this);
 
         //设置指令
 
@@ -355,6 +366,7 @@ public class GamePanel extends JPanel implements ActionListener {
         jmi2.setActionCommand("exit");
         jmi3.setActionCommand("help");
         jmi4.setActionCommand("win");
+        jmi5.setActionCommand("return");
 
     }
 
@@ -383,6 +395,33 @@ public class GamePanel extends JPanel implements ActionListener {
             JOptionPane.showMessageDialog(null, "得到数字2048获得胜利，当没有空卡片则失效",
                     "提示！", JOptionPane.INFORMATION_MESSAGE);
         }
+        else if(command.equals("return")){
+            System.out.println("返回上一步");
+            Back();
+        }
+    }
+    private void Back() {
+
+        boolean res = false;
+        if(!history.isEmpty()){
+            clearCard();
+            Card card;
+            cards=history.pop();
+            for (int i = 0; i < ROWS; i++) {
+                for (int j = 0; j < COLS; j++) {
+                    card = cards[i][j];
+                }
+            }
+
+            Card.moveBack(cards,res);
+            //重绘画布
+            repaint();
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "没有上一步了",
+                    "提示！", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
     }
 
     // 新游戏
@@ -391,5 +430,6 @@ public class GamePanel extends JPanel implements ActionListener {
         GamePanel panel1 = new GamePanel(frame1);
         frame1.add(panel1);
         frame1.setVisible(true);
+        frame.setVisible(false);
     }
 }
