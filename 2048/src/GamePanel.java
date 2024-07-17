@@ -15,7 +15,7 @@ public class GamePanel extends JPanel implements ActionListener {
     private GamePanel panel = null;
 
     private Card[][] cards = new Card[ROWS][COLS];
-    private Stack<Card[][]> history;
+    private Stack<Card[][]> history=new Stack<>();
 
     private String gameFlag = "start";
 
@@ -283,13 +283,13 @@ public class GamePanel extends JPanel implements ActionListener {
     //创建卡片
     private void initCard() {
         Card card;
+        history=new Stack<>();
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
                 card = new Card(i, j);
                 cards[i][j] = card;
             }
         }
-        history=new Stack<>();
     }
 
     @Override
@@ -401,19 +401,11 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
     private void Back() {
-
-        boolean res = false;
         if(!history.isEmpty()){
-            clearCard();
             Card card;
-            cards=history.pop();
-            for (int i = 0; i < ROWS; i++) {
-                for (int j = 0; j < COLS; j++) {
-                    card = cards[i][j];
-                }
-            }
-
-            Card.moveBack(cards,res);
+            Card[][] cards1 = new Card[ROWS][COLS];
+            cards1=history.pop();
+            setCurrentCards(cards1);
             //重绘画布
             repaint();
         }
@@ -422,6 +414,10 @@ public class GamePanel extends JPanel implements ActionListener {
                     "提示！", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
+    }
+
+    private void setCurrentCards(Card[][] cards1) {
+        this.cards=cards1;
     }
 
     // 新游戏
