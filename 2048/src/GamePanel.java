@@ -387,6 +387,9 @@ public class GamePanel extends JPanel implements ActionListener {
 
     // 新游戏
     private void restart() {
-
+        GameFrame frame1 = new GameFrame();
+        GamePanel panel1 = new GamePanel(frame1);
+        frame1.add(panel1);
+        frame1.setVisible(true);
     }
 }

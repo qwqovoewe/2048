@@ -6,6 +6,5 @@ public class Main {
         GamePanel panel = new GamePanel(frame);
         frame.add(panel);
         frame.setVisible(true);
-
     }
 }
