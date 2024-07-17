@@ -224,4 +224,15 @@ public class Card {
         }
     }
 
+    public Card CLone() {
+        Card clonecard=new Card(this.i,this.j);
+        clonecard.num=this.num;
+        clonecard.h=this.h;
+        clonecard.merge=this.merge;
+        clonecard.start=this.start;
+        clonecard.w=this.w;
+        clonecard.y=this.y;
+        clonecard.x=this.x;
+        return clonecard;
+    }
 }

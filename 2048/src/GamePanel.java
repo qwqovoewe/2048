@@ -154,7 +154,7 @@ public class GamePanel extends JPanel implements ActionListener {
         boolean res = false;
         System.out.println("movetop");
         Card card;
-        history.push(cards);
+        history.push(Clone(cards));
         for (int i = 1; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
                 card = cards[i][j];
@@ -170,11 +170,22 @@ public class GamePanel extends JPanel implements ActionListener {
         return res;
     }
 
+    private Card[][] Clone(Card[][] cards) {
+            Card[][] clonedCards = new Card[ROWS][COLS];
+            for (int i = 0; i < ROWS; i++) {
+                for (int j = 0; j < COLS; j++) {
+                    clonedCards[i][j] = cards[i][j].CLone();
+                }
+            }
+            return clonedCards;
+
+    }
+
     private boolean moveCardLeft(boolean b) {
         boolean res = false;
         System.out.println("moveleft");
         Card card;
-        history.push(cards);
+        history.push(Clone(cards));
         for (int i = 0; i < ROWS; i++) {
             for (int j = 1; j < COLS; j++) {
                 card = cards[i][j];
@@ -193,7 +204,7 @@ public class GamePanel extends JPanel implements ActionListener {
         boolean res = false;
         System.out.println("movebottom");
         Card card;
-        history.push(cards);
+        history.push(Clone(cards));
         for (int i = ROWS - 2; i >= 0; i--) {
             for (int j = 0; j < COLS; j++) {
                 card = cards[i][j];
@@ -212,7 +223,7 @@ public class GamePanel extends JPanel implements ActionListener {
         System.out.println("moveright");
         boolean res = false;
         Card card;
-        history.push(cards);
+        history.push(Clone(cards));
         for (int i = 0; i < ROWS; i++) {
             for (int j = COLS - 2; j >= 0; j--) {
                 card = cards[i][j];
