@@ -431,7 +431,7 @@ public class GamePanel extends JPanel implements ActionListener {
             restart();
         } else if (command.equals("exit")) {
             Object[] options = {"确定", "取消"};
-            int res = JOptionPane.showOptionDialog(this, "你确定退出游戏吗？", "", JOptionPane.YES_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+            int res = JOptionPane.showOptionDialog(this, "你确定要退出游戏吗？", "", JOptionPane.YES_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
             if (res == 0) {
                 System.exit(0);
             }
