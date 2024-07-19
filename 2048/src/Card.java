@@ -1,6 +1,7 @@
 import java.awt.*;
-
-public class Card {
+import java.io.Serializable;
+public class Card implements Serializable{
+    private static final long serialVersionUID = 1L; // 添加 serialVersionUID
     private int x = 0;//x坐标
     private int y = 0;//y坐标
     private int w = 80;//宽

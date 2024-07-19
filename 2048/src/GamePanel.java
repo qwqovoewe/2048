@@ -7,7 +7,12 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Random;
 import java.util.Stack;
-
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 public class GamePanel extends JPanel implements ActionListener {
     private static final int ROWS = 4;
     private static final int COLS = 4;
@@ -327,24 +332,30 @@ public class GamePanel extends JPanel implements ActionListener {
 
     //创建菜单
     private void creatMenu() {
-        //创建字体
+        // 创建字体
         Font tfont = creatFont();
-        //创建JMenuBar
+        // 创建JMenuBar
         JMenuBar jmb = new JMenuBar();
 
         JMenu jMenu1 = new JMenu("游戏");
         jMenu1.setFont(tfont);
 
-        //创建子项
+        // 创建子项
         JMenuItem jmi1 = new JMenuItem("新游戏");
         jmi1.setFont(tfont);
         JMenuItem jmi2 = new JMenuItem("退出");
         jmi2.setFont(tfont);
         JMenuItem jmi5 = new JMenuItem("返回上一步");
         jmi5.setFont(tfont);
+        JMenuItem jmi6 = new JMenuItem("保存游戏");
+        jmi6.setFont(tfont);
+        JMenuItem jmi7 = new JMenuItem("加载游戏");
+        jmi7.setFont(tfont);
 
         jMenu1.add(jmi1);
         jMenu1.add(jmi5);
+        jMenu1.add(jmi6);
+        jMenu1.add(jmi7);
         jMenu1.add(jmi2);
 
         JMenu jMenu2 = new JMenu("帮助");
@@ -364,24 +375,26 @@ public class GamePanel extends JPanel implements ActionListener {
 
         frame.setJMenuBar(jmb);
 
-        //添加事件监听(点击)
+        // 添加事件监听(点击)
         jmi1.addActionListener(this);
         jmi2.addActionListener(this);
         jmi3.addActionListener(this);
         jmi4.addActionListener(this);
         jmi5.addActionListener(this);
+        jmi6.addActionListener(this);
+        jmi7.addActionListener(this);
 
-        //设置指令
-
+        // 设置指令
         jmi1.setActionCommand("restart");
         jmi2.setActionCommand("exit");
         jmi3.setActionCommand("help");
         jmi4.setActionCommand("win");
         jmi5.setActionCommand("return");
-
+        jmi6.setActionCommand("save");
+        jmi7.setActionCommand("load");
     }
 
-    @Override
+    /*@Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if(command.equals("restart")){
@@ -410,7 +423,31 @@ public class GamePanel extends JPanel implements ActionListener {
             System.out.println("返回上一步");
             Back();
         }
+    }*/
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String command = e.getActionCommand();
+        if (command.equals("restart")) {
+            restart();
+        } else if (command.equals("exit")) {
+            Object[] options = {"确定", "取消"};
+            int res = JOptionPane.showOptionDialog(this, "你确定退出游戏吗？", "", JOptionPane.YES_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+            if (res == 0) {
+                System.exit(0);
+            }
+        } else if (command.equals("help")) {
+            JOptionPane.showMessageDialog(null, "通过键盘的上下左右来移动，相同的数字会合并", "提示！", JOptionPane.INFORMATION_MESSAGE);
+        } else if (command.equals("win")) {
+            JOptionPane.showMessageDialog(null, "得到数字2048获得胜利，当没有空卡片则失效", "提示！", JOptionPane.INFORMATION_MESSAGE);
+        } else if (command.equals("return")) {
+            Back();
+        } else if (command.equals("save")) {
+            saveGameState("game_save.dat");
+        } else if (command.equals("load")) {
+            loadGameState("game_save.dat");
+        }
     }
+
     private void Back() {
         if(!history.isEmpty()){
             Card card;
@@ -438,5 +475,29 @@ public class GamePanel extends JPanel implements ActionListener {
         frame1.add(panel1);
         frame1.setVisible(true);
         frame.setVisible(false);
+    }
+    //保存游戏状态到文件
+    public void saveGameState(String filename) {
+        GameState gameState = new GameState(cards, gameFlag);
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
+            oos.writeObject(gameState);
+            JOptionPane.showMessageDialog(null, "游戏进度已保存！", "提示", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "保存游戏进度失败！", "错误", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    //从文件中加载游戏状态
+    public void loadGameState(String filename) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
+            GameState gameState = (GameState) ois.readObject();
+            this.cards = gameState.getCards();
+            this.gameFlag = gameState.getGameFlag();
+            repaint();
+            JOptionPane.showMessageDialog(null, "游戏进度已加载！", "提示", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "加载游戏进度失败！", "错误", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
