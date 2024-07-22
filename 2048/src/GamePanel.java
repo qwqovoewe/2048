@@ -13,7 +13,7 @@ import java.io.ObjectOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-public class GamePanel extends JPanel implements ActionListener {
+public class GamePanel extends JPanel implements ActionListener {//游戏面板的绘制和逻辑处理。
     private static final int ROWS = 4;
     private static final int COLS = 4;
     private JFrame frame = null;
@@ -105,7 +105,7 @@ public class GamePanel extends JPanel implements ActionListener {
         } else if (cardIsFull()) {
             if (moveCardTop(false) ||
                     moveCardRight(false) ||
-                    moveCardRight(false) ||
+                    moveCardLeft(false) ||
                     moveCardBottom(false)) {
                 return;
 
